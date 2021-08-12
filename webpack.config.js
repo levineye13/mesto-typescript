@@ -1,46 +1,69 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const pathToBuildDirectory = path.resolve(__dirname, 'dist');
+
 module.exports = {
-  entry: { main: './src/pages/index.js' },
+  mode: 'development',
+  context: path.resolve(__dirname, 'src'),
+  entry: {
+    main: './pages/index.js',
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: pathToBuildDirectory,
     filename: 'main.js',
+    publicPath: '',
+  },
+  devServer: {
+    contentBase: pathToBuildDirectory,
+    compress: true,
+    host: 'localhost',
+    port: 8080,
+    open: true,
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        use: 'babel-loader',
         exclude: '/node_modules/',
       },
       {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          'postcss-loader',
+        ],
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
-        loader: 'file-loader?name=./images/[name].[ext]',
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[hash][ext]',
+        },
       },
       {
         test: /\.(eot|ttf|woff|woff2)$/,
-        loader: 'file-loader?name=./vendor/[name].[ext]',
-      },
-      {
-        test: /\.html$/,
-        loader: 'html-loader',
-      },
-      {
-        test: /\.css$/,
-        loader: [
-          MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { importLoaders: 1 } },
-          'postcss-loader',
-        ],
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[hash][ext]',
+        },
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './index.html',
     }),
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
   ],
 };
