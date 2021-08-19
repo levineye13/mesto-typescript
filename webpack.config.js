@@ -9,7 +9,7 @@ module.exports = {
   mode: 'development',
   context: path.resolve(__dirname, 'src'),
   entry: {
-    main: './pages/index.js',
+    main: './pages/index.ts',
   },
   output: {
     path: pathToBuildDirectory,
@@ -22,9 +22,18 @@ module.exports = {
     host: 'localhost',
     port: 8080,
     open: true,
+    watchContentBase: true,
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        exclude: '/node_modules/',
+      },
       {
         test: /\.js$/,
         use: 'babel-loader',

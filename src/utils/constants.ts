@@ -1,3 +1,5 @@
+import { IHttpMethod } from './types';
+
 export const API_BASE_URL: string =
   'https://mesto.nomoreparties.co/v1/cohort-16';
 
@@ -43,16 +45,6 @@ export const popupProfileSelector: string = '.popup_type_profile';
 export const popupAddCardSelector: string = '.popup_type_add-card';
 export const popupConfirmSelector: string = '.popup_type_confirm';
 export const popupUpdateAvatarSelector: string = '.popup_type_update-avatar';
-
-interface IHttpMethod {
-  OPTIONS: string;
-  HEAD: string;
-  GET: string;
-  POST: string;
-  PUT: string;
-  PATCH: string;
-  DELETE: string;
-}
 
 export const HTTP_METHODS: IHttpMethod = {
   OPTIONS: 'OPTIONS',

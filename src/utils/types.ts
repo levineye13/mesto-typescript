@@ -28,3 +28,18 @@ export interface IHttpMethod {
   PATCH: string;
   DELETE: string;
 }
+
+export interface ICard {
+  _cardSelector: string;
+  _data: {
+    name: string;
+    link: string;
+    likes: object[];
+    owner: object;
+  };
+  _isLiked: boolean;
+  _likeNumbers: number;
+  _handleClick(): void;
+  _handleLike(): void;
+  _handleDelete(): void;
+}

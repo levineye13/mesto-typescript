@@ -1,11 +1,7 @@
-interface IApiError {
-  message: string;
-  status: number;
-  statusText: string;
-}
+import { IApiError } from './types';
 
 class ApiError extends Error implements IApiError {
-  public name: string = 'ApiError';
+  public readonly name: string = 'ApiError';
   public status: number;
   public statusText: string;
 
