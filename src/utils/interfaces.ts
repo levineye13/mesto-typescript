@@ -43,3 +43,7 @@ export interface ICard {
   likes: IUser[];
   owner: IUser;
 }
+
+export interface IFormInput {
+  [key: string]: string;
+}

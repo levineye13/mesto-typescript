@@ -1,4 +1,4 @@
-import { IUser } from '../utils/types';
+import { IUser } from '../utils/interfaces';
 
 class User {
   private _id: string = '';
@@ -32,9 +32,9 @@ class User {
   public get getUser(): IUser {
     return {
       id: this._id,
-      name: this._name.textContent as string,
-      about: this._about.textContent as string,
-      avatar: this._avatar.src as string,
+      name: this._name.textContent || '',
+      about: this._about.textContent || '',
+      avatar: this._avatar.src || '',
     };
   }
 }

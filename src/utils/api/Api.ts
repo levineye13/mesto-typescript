@@ -1,5 +1,5 @@
 import ApiError from '../ApiError';
-import { IRequestHeader, IResponce } from '../types';
+import { IRequestHeader, IResponce } from '../interfaces';
 
 class Api {
   protected readonly _baseUrl: string;

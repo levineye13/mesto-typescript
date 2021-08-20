@@ -1,5 +1,5 @@
 import Api from './Api';
-import { IRequestHeader } from '../types';
+import { ICard, IRequestHeader } from '../interfaces';
 import { HTTP_METHODS, API_BASE_URL, API_KEY } from '../../utils/constants';
 
 class ApiCard extends Api {
@@ -7,7 +7,7 @@ class ApiCard extends Api {
     super({ _baseUrl, _headers });
   }
 
-  public async getCards() {
+  public async getCards(): Promise<ICard[]> {
     try {
       const cards = await fetch(`${this._baseUrl}/cards`, {
         method: HTTP_METHODS.GET,

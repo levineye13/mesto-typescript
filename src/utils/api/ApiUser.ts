@@ -1,5 +1,5 @@
 import Api from './Api';
-import { IRequestHeader, IUser } from '../types';
+import { IRequestHeader, IUser } from '../interfaces';
 import { HTTP_METHODS, API_BASE_URL, API_KEY } from '../../utils/constants';
 
 class ApiUser extends Api {

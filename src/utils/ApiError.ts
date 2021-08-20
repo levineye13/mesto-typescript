@@ -1,4 +1,4 @@
-import { IApiError } from './types';
+import { IApiError } from './interfaces';
 
 class ApiError extends Error implements IApiError {
   public readonly name: string = 'ApiError';

@@ -1,4 +1,4 @@
-import { IHttpMethod } from './types';
+import { IHttpMethod } from './interfaces';
 
 export const API_BASE_URL: string =
   'https://mesto.nomoreparties.co/v1/cohort-16';
