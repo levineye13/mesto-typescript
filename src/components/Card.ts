@@ -1,28 +1,18 @@
-import { ICard } from '../utils/types';
+import { ICard, IUser } from '../utils/types';
 
 class Card {
   private _cardSelector: string;
-  private _data: {
-    name: string;
-    link: string;
-    likes: object[];
-    owner: object;
-  };
+  private _data: ICard;
   private _isLiked: boolean = false;
   private _likeNumbers: number = 0;
-  private _handleClick(name: string, link: string): void;
-  private _handleLike(cardElement: HTMLLIElement): void;
-  private _handleDelete(cardElement: HTMLLIElement): void;
+	private _handleClick = (name: string, link: string) => void;
+  private _handleLike = (cardElement: HTMLLIElement)=> void;
+  private _handleDelete=(cardElement: HTMLLIElement)=> void;
   private _cardElement: HTMLLIElement;
 
   public constructor(
     cardSelector: string,
-    data: {
-      name: string;
-      link: string;
-      likes: object[];
-      owner: object;
-    },
+    data: ICard,
     handleClick: (name: string, link: string) => void,
     handleLike: (cardElement: HTMLLIElement) => void,
     handleDelete: (cardElement: HTMLLIElement) => void
@@ -39,7 +29,7 @@ class Card {
    * @return {object} Возвращает шаблон разметки
    * @private
    */
-  private _getTemplate(): HTMLLIElement {
+	private _getTemplate(): HTMLLIElement {
     const template: HTMLTemplateElement = document.querySelector(
       this._cardSelector
     ) as HTMLTemplateElement;
@@ -103,7 +93,7 @@ class Card {
   }
 
   private _handleCardLike(): void {
-    this._handleLike(this._cardElement);
+    //this._handleLike(this._cardElement);
     this._isLiked = true;
     this._likeNumbers++;
     (
@@ -112,7 +102,7 @@ class Card {
   }
 
   private _handleCardDislike(): void {
-    this._handleLike(this._cardElement);
+    //this._handleLike(this._cardElement);
     this._isLiked = false;
     this._likeNumbers--;
     (
@@ -121,7 +111,7 @@ class Card {
   }
 
   private _handleCardDelete(): void {
-    this._handleDelete(this._cardElement);
+    //this._handleDelete(this._cardElement);
     this._cardElement.remove();
   }
 
