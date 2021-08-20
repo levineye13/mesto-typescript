@@ -29,17 +29,17 @@ export interface IHttpMethod {
   DELETE: string;
 }
 
+export interface IUser {
+  id: string;
+  name: string;
+  avatar: string;
+  about: string;
+}
+
 export interface ICard {
-  _cardSelector: string;
-  _data: {
-    name: string;
-    link: string;
-    likes: object[];
-    owner: object;
-  };
-  _isLiked: boolean;
-  _likeNumbers: number;
-  _handleClick(): void;
-  _handleLike(): void;
-  _handleDelete(): void;
+  id: string;
+  name: string;
+  link: string;
+  likes: IUser[];
+  owner: IUser;
 }
