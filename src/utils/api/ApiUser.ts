@@ -1,5 +1,5 @@
 import Api from './Api';
-import { IRequestHeader } from '../types';
+import { IRequestHeader, IUser } from '../types';
 import { HTTP_METHODS, API_BASE_URL, API_KEY } from '../../utils/constants';
 
 class ApiUser extends Api {
@@ -7,7 +7,7 @@ class ApiUser extends Api {
     super({ _baseUrl, _headers });
   }
 
-  public async getProfileInfo(): Promise<object | string> {
+  public async getProfileInfo(): Promise<IUser> {
     try {
       const user = await fetch(`${this._baseUrl}/users/me`, {
         method: HTTP_METHODS.GET,
