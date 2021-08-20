@@ -6,7 +6,7 @@ import Section from '../components/Section';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import PopupWithConfirm from '../components/PopupWithConfirm.js';
-import UserInfo from '../components/UserInfo.js';
+import User from '../components/User';
 import apiUser from '../utils/api/ApiUser';
 import apiCard from '../utils/api/ApiCard';
 import {
@@ -28,6 +28,7 @@ import {
   popupProfileSelector,
   popupUpdateAvatarSelector,
 } from './../utils/constants';
+import { IUser } from '../utils/types';
 
 // /**
 //  * Функция изменения состояния лайка
@@ -177,10 +178,10 @@ import {
 // };
 
 //Создание экземпляра информации о пользователе
-const userInfo = new UserInfo({
-  profileAvatarSelector,
-  profileTitleSelector,
-  profileSubtitleSelector,
+const user = new User({
+  titleSelector: profileTitleSelector,
+  subtitleSelector: profileSubtitleSelector,
+  avatarSelector: profileAvatarSelector,
 });
 
 // //Экземпляр попапа с картинкой
@@ -235,9 +236,8 @@ const userInfo = new UserInfo({
 
 (async () => {
   try {
-    const user = await apiUser.getProfileInfo();
-    userInfo.setUserInfo(user);
-    console.log(user);
+    const userInfo: IUser = await apiUser.getProfileInfo();
+    user.setUser = userInfo;
   } catch (err) {
     console.error(err);
   }
@@ -250,7 +250,13 @@ const userInfo = new UserInfo({
 
     const cardE: Card = new Card(
       '#template-card',
-      { name: '', link: '', likes: [{}], owner: {} },
+      {
+        id: '',
+        name: '',
+        link: '',
+        likes: [{ id: '', name: '', about: '', avatar: '' }],
+        owner: { id: '', name: '', about: '', avatar: '' },
+      },
       () => {},
       () => {},
       () => {}
