@@ -1,16 +1,14 @@
-import { IHttpMethod } from './interfaces';
+import { IHttpMethod, IFormValidation } from './interfaces';
 
 export const API_BASE_URL: string =
   'https://mesto.nomoreparties.co/v1/cohort-16';
 
 export const API_KEY: string = 'f1f27dcb-4c71-4cd5-a34d-2e8f5fd4811e';
 
-export const validationObject: {
-  [selector: string]: string;
-} = {
+export const validationConfig: IFormValidation = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__save-button',
+  submitSelector: '.popup__save-button',
   inactiveButtonClass: 'button_inactive',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible',
@@ -55,3 +53,5 @@ export const HTTP_METHODS: IHttpMethod = {
   PATCH: 'PATCH',
   DELETE: 'DELETE',
 };
+
+export const KEY_ESCAPE = 'Escape';

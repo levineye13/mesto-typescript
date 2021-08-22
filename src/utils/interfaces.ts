@@ -47,3 +47,12 @@ export interface ICard {
 export interface IFormInput {
   [key: string]: string;
 }
+
+export interface IFormValidation {
+  formSelector: string;
+  inputSelector: string;
+  submitSelector: string;
+  inactiveButtonClass: string;
+  inputErrorClass: string;
+  errorClass: string;
+}
