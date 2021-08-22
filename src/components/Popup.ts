@@ -1,3 +1,5 @@
+import { KEY_ESCAPE } from '../utils/constants';
+
 class Popup {
   protected _popup: HTMLElement;
   private _popupOpened: string = 'popup_opened';
@@ -27,7 +29,7 @@ class Popup {
   }
 
   private _handleEscClose = (evt: KeyboardEvent): void => {
-    if (evt.key === 'Escape') {
+    if (evt.key === KEY_ESCAPE) {
       this.close();
     }
   };
