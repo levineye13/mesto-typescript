@@ -10,10 +10,12 @@ class Popup {
 
   protected open(): void {
     this._popup.classList.add(this._popupOpened);
+    this._setEventListeners();
   }
 
   protected close(): void {
     this._popup.classList.remove(this._popupOpened);
+    this._removeEventListeners();
   }
 
   protected _setEventListeners(): void {

@@ -1,7 +1,7 @@
 import { IFormValidation } from '../utils/interfaces';
 
 class FormValidator {
-  constructor(
+  public constructor(
     private _form: HTMLFormElement,
     private _validationConfig: IFormValidation
   ) {}

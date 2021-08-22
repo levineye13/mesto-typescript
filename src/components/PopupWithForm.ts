@@ -3,12 +3,15 @@ import { IFormInput } from '../utils/interfaces';
 
 class PopupWithForm extends Popup {
   private _form: HTMLFormElement;
-  private _handleSubmit: (value: IFormInput) => void;
+  private _handleSubmitCallback: (value: IFormInput) => void;
 
-  public constructor(popupSelector: string, handleSubmit: () => void) {
+  public constructor(
+    popupSelector: string,
+    handleSubmitCallback: (value: IFormInput) => void
+  ) {
     super(popupSelector);
     this._form = this._popup.querySelector('.popup__form') as HTMLFormElement;
-    this._handleSubmit = handleSubmit;
+    this._handleSubmitCallback = handleSubmitCallback;
   }
 
   private _getInputValues(): IFormInput {
@@ -20,12 +23,21 @@ class PopupWithForm extends Popup {
     }, {});
   }
 
+  private _handleSubmit = (evt: Event): void => {
+    evt.preventDefault();
+    this._handleSubmitCallback(this._getInputValues());
+  };
+
   protected _setEventListeners(): void {
     super._setEventListeners();
-    this._form.addEventListener('submit', (evt): void => {
-      evt.preventDefault();
-      this._handleSubmit(this._getInputValues());
-    });
+
+    this._form.addEventListener('submit', this._handleSubmit);
+  }
+
+  protected _removeEventListeners(): void {
+    super._removeEventListeners();
+
+    this._form.removeEventListener('submit', this._handleSubmit);
   }
 
   public open(): void {

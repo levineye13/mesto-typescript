@@ -4,7 +4,7 @@ class PopupWithImage extends Popup {
   private _image: HTMLImageElement;
   private _title: HTMLHeadingElement;
 
-  constructor(popupSelector: string) {
+  public constructor(popupSelector: string) {
     super(popupSelector);
     this._image = document.querySelector(
       '.popup__card-img'
