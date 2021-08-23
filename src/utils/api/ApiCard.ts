@@ -19,6 +19,49 @@ class ApiCard extends Api {
       return err;
     }
   }
+
+  public async addCard(card: { name: string; link: string }): Promise<ICard> {
+    try {
+      const res = await fetch(`${this._baseUrl}/cards`, {
+        method: HTTP_METHODS.POST,
+        headers: { ...this._headers },
+        body: JSON.stringify({
+          name: card.name,
+          link: card.link,
+        }),
+      });
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async deleteCard(cardId: string): Promise<ICard> {
+    try {
+      const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
+        method: HTTP_METHODS.DELETE,
+        headers: { ...this._headers },
+      });
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async likeCard(cardId: string, methodHTTP: string): Promise<ICard> {
+    try {
+      const res = await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        method: methodHTTP,
+        headers: { ...this._headers },
+      });
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      return err;
+    }
+  }
 }
 
 const apiCard = new ApiCard(API_BASE_URL, {

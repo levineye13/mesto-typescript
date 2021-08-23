@@ -236,7 +236,7 @@ const user = new User({
 
 (async () => {
   try {
-    const userInfo: IUser = await apiUser.getProfileInfo();
+    const userInfo: IUser = await apiUser.getUser();
     user.setUser = userInfo;
   } catch (err) {
     console.error(err);
