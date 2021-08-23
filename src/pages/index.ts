@@ -12,7 +12,7 @@ import apiCard from '../utils/api/ApiCard';
 import {
   API_BASE_URL,
   API_KEY,
-  validationObject,
+  validationConfig,
   containerSelector,
   openEditFormButton,
   openCardFormButton,
@@ -28,7 +28,7 @@ import {
   popupProfileSelector,
   popupUpdateAvatarSelector,
 } from './../utils/constants';
-import { IUser } from '../utils/types';
+import { IUser } from '../utils/interfaces';
 
 // /**
 //  * Функция изменения состояния лайка
@@ -248,19 +248,19 @@ const user = new User({
     const card = await apiCard.getCards();
     console.log(card);
 
-    const cardE: Card = new Card(
-      '#template-card',
-      {
+    const cardE: Card = new Card({
+      selector: '#template-card',
+      data: {
         id: '',
         name: '',
         link: '',
         likes: [{ id: '', name: '', about: '', avatar: '' }],
         owner: { id: '', name: '', about: '', avatar: '' },
       },
-      () => {},
-      () => {},
-      () => {}
-    );
+      handleClickCallback: () => {},
+      handleDeleteCallback: () => {},
+      handleLikeCallback: () => {},
+    });
     cardE.getView();
   } catch (err) {
     console.error(err);

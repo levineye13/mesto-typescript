@@ -1,27 +1,26 @@
-import { ICard, IUser } from '../utils/types';
+import { ICard } from '../utils/interfaces';
 
 class Card {
   private _cardSelector: string;
   private _data: ICard;
   private _isLiked: boolean = false;
   private _likeNumbers: number = 0;
-	private _handleClick = (name: string, link: string) => void;
-  private _handleLike = (cardElement: HTMLLIElement)=> void;
-  private _handleDelete=(cardElement: HTMLLIElement)=> void;
-  private _cardElement: HTMLLIElement;
+  private _handleClickCallback: (name: string, link: string) => void;
+  private _handleLikeCallback: (cardElement: HTMLLIElement) => void;
+  private _handleDeleteCallback: (cardElement: HTMLLIElement) => void;
 
-  public constructor(
-    cardSelector: string,
-    data: ICard,
-    handleClick: (name: string, link: string) => void,
-    handleLike: (cardElement: HTMLLIElement) => void,
-    handleDelete: (cardElement: HTMLLIElement) => void
-  ) {
-    this._cardSelector = cardSelector;
-    this._data = data;
-    this._handleClick = handleClick;
-    this._handleLike = handleLike;
-    this._handleDelete = handleDelete;
+  public constructor(card: {
+    selector: string;
+    data: ICard;
+    handleClickCallback: (name: string, link: string) => void;
+    handleLikeCallback: (cardElement: HTMLLIElement) => void;
+    handleDeleteCallback: (cardElement: HTMLLIElement) => void;
+  }) {
+    this._cardSelector = card.selector;
+    this._data = card.data;
+    this._handleClickCallback = card.handleClickCallback;
+    this._handleLikeCallback = card.handleLikeCallback;
+    this._handleDeleteCallback = card.handleDeleteCallback;
   }
 
   /**
@@ -29,7 +28,7 @@ class Card {
    * @return {object} Возвращает шаблон разметки
    * @private
    */
-	private _getTemplate(): HTMLLIElement {
+  private _getTemplate(): HTMLLIElement {
     const template: HTMLTemplateElement = document.querySelector(
       this._cardSelector
     ) as HTMLTemplateElement;
@@ -88,34 +87,39 @@ class Card {
   //   cardElement = null;
   // }
 
-  private _handleCardClick(name: string, link: string): void {
-    this._handleClick(name, link);
-  }
-
-  private _handleCardLike(): void {
-    //this._handleLike(this._cardElement);
+  private _like(likeElement: HTMLSpanElement): void {
     this._isLiked = true;
     this._likeNumbers++;
-    (
-      this._cardElement.querySelector('.elements__like-count') as HTMLLIElement
-    ).textContent = this._likeNumbers.toString();
+    likeElement.textContent = this._likeNumbers.toString();
   }
 
-  private _handleCardDislike(): void {
-    //this._handleLike(this._cardElement);
+  private _dislike(likeElement: HTMLSpanElement): void {
     this._isLiked = false;
     this._likeNumbers--;
-    (
-      this._cardElement.querySelector('.elements__like-count') as HTMLLIElement
-    ).textContent = this._likeNumbers.toString();
+    likeElement.textContent = this._likeNumbers.toString();
   }
 
-  private _handleCardDelete(): void {
-    //this._handleDelete(this._cardElement);
-    this._cardElement.remove();
+  private _handleClick(name: string, link: string): void {
+    this._handleClickCallback(name, link);
   }
 
-  private checkOwner() {}
+  private _handleDelete(cardElement: HTMLLIElement): void {
+    this._handleDeleteCallback(cardElement);
+    cardElement.remove();
+  }
+
+  private _handleChangeLike(
+    cardElement: HTMLLIElement,
+    likeElement: HTMLSpanElement
+  ) {
+    this._handleLikeCallback(cardElement);
+
+    if (this._isLiked) {
+      this._dislike(likeElement);
+    } else {
+      this._like(likeElement);
+    }
+  }
 
   // /**
   //  * Обработчики событий
@@ -123,23 +127,28 @@ class Card {
   //  * @param  {object} cardElement - разметка карточки
   //  * @private
   //  */
-  // _setEventListeners(cardElement) {
-  //   cardElement
-  //     .querySelector('.elements__delete-card')
-  //     .addEventListener('click', (evt) => {
-  //       evt.stopPropagation();
-  //       this._handleDelete(cardElement);
-  //     });
-  //   cardElement
-  //     .querySelector('.elements__like-button')
-  //     .addEventListener('click', (evt) => {
-  //       evt.stopPropagation();
-  //       this._handleLike(cardElement);
-  //     });
-  //   cardElement.addEventListener('click', () =>
-  //     this._handleClick(this._data.name, this._data.link)
-  //   );
-  // }
+  private _setEventListeners(
+    cardElement: HTMLLIElement,
+    likeElement: HTMLSpanElement
+  ): void {
+    (
+      cardElement.querySelector('.elements__delete-card') as HTMLButtonElement
+    ).addEventListener('click', (evt) => {
+      evt.stopPropagation();
+      this._handleDelete(cardElement);
+    });
+
+    (
+      cardElement.querySelector('.elements__like-button') as HTMLButtonElement
+    ).addEventListener('click', (evt) => {
+      evt.stopPropagation();
+      this._handleChangeLike(cardElement, likeElement);
+    });
+
+    cardElement.addEventListener('click', () =>
+      this._handleClick(this._data.name, this._data.link)
+    );
+  }
 
   /**
    * Создание карточки
@@ -147,20 +156,29 @@ class Card {
    * @public
    * @return {object} Возвращает заполненную разметку
    */
-  public getView() {
-    this._cardElement = this._getTemplate() as HTMLLIElement;
+  public getView(): HTMLLIElement {
+    const newCard: HTMLLIElement = this._getTemplate() as HTMLLIElement;
 
-    // this._setEventListeners(this._cardElement);
+    const imgElement: HTMLImageElement = newCard.querySelector(
+      '.elements__img'
+    ) as HTMLImageElement;
 
-    // this._imgElement = this._cardElement.querySelector('.elements__img');
-    // this._imgElement.src = this._data.link;
-    // this._imgElement.setAttribute('alt', this._data.name);
-    // this._cardElement.querySelector('.elements__title').textContent =
-    //   this._data.name;
-    // this._cardElement.querySelector('.elements__like-count').textContent =
-    //   this._likeCount;
+    const titleElement: HTMLHeadingElement = newCard.querySelector(
+      '.elements__title'
+    ) as HTMLHeadingElement;
 
-    return this._cardElement;
+    const likeElement: HTMLSpanElement = newCard.querySelector(
+      '.elements__like-count'
+    ) as HTMLSpanElement;
+
+    this._setEventListeners(newCard, likeElement);
+
+    imgElement.src = this._data.link;
+    imgElement.alt = this._data.name;
+    titleElement.textContent = this._data.name;
+    likeElement.textContent = this._likeNumbers.toString();
+
+    return newCard;
   }
 }
 
