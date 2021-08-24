@@ -2,15 +2,19 @@ import Popup from './Popup';
 
 class PopupWithConfirm extends Popup {
   private _form: HTMLFormElement;
+  private _itemId: string = '';
+  private _itemMarkup: HTMLElement | null = null;
+  private _handleSubmitCallback: (id: string, markup: HTMLElement) => void;
 
   public constructor(
     popupSelector: string,
-    private _handleSubmitCallback: (id: string, markup: HTMLElement) => void,
-    private _itemId: string = '',
-    private _itemMarkup: HTMLElement | null = null
+    callback: {
+      handleSubmitCallback: (id: string, markup: HTMLElement) => void;
+    }
   ) {
     super(popupSelector);
     this._form = this._popup.querySelector('.popup__form') as HTMLFormElement;
+    this._handleSubmitCallback = callback.handleSubmitCallback;
   }
 
   private _handleSubmit(evt: Event): void {

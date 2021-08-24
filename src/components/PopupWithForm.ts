@@ -7,11 +7,13 @@ class PopupWithForm extends Popup {
 
   public constructor(
     popupSelector: string,
-    handleSubmitCallback: (value: IFormInput) => void
+    callback: {
+      handleSubmitCallback: (value: IFormInput) => void;
+    }
   ) {
     super(popupSelector);
     this._form = this._popup.querySelector('.popup__form') as HTMLFormElement;
-    this._handleSubmitCallback = handleSubmitCallback;
+    this._handleSubmitCallback = callback.handleSubmitCallback;
   }
 
   private _getInputValues(): IFormInput {
