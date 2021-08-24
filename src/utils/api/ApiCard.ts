@@ -50,10 +50,23 @@ class ApiCard extends Api {
     }
   }
 
-  public async likeCard(cardId: string, methodHTTP: string): Promise<ICard> {
+  public async likeCard(cardId: string): Promise<ICard> {
     try {
       const res = await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-        method: methodHTTP,
+        method: HTTP_METHODS.PUT,
+        headers: { ...this._headers },
+      });
+
+      return this._checkResponceStatus(res);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async dislikeCard(cardId: string): Promise<ICard> {
+    try {
+      const res = await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        method: HTTP_METHODS.DELETE,
         headers: { ...this._headers },
       });
 
