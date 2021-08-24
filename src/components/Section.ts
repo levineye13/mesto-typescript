@@ -1,41 +1,18 @@
-// export default class Section {
-//   constructor({ items, renderer }, containerSelector) {
-//     this._items = items;
-//     this._renderer = renderer;
-//     this._container = document.querySelector(containerSelector);
-//   }
-//   /**
-//    * Карточки массива вставляются в конец, пользовательские - в начало
-//    *
-//    * @param  {object} element - разметка вставляемой карточки
-//    * @param  {boolean} isArray - проверка на массив
-//    */
-// 	addItem(element, isArray) {
-// 		if (isArray) {
-//       this._container.append(element);
-// 		} else {
-//       this._container.prepend(element);
-//     }
-//   }
-
-// 	renderItems() {
-// 		this._items.forEach((item) => this._renderer(item));
-//   }
-// }
-
-class Section {
+class Section<T> {
   private _container: HTMLElement;
-  private _items: object[];
-  private _renderer: (item: object) => void;
+  private _items: T[];
+  private _renderer: (item: T) => void;
 
   public constructor(
     containerSelector: string,
-    items: object[],
-    renderer: () => void
+    data: {
+      items: T[];
+      renderCallback: (item: T) => void;
+    }
   ) {
     this._container = document.querySelector(containerSelector) as HTMLElement;
-    this._items = items;
-    this._renderer = renderer;
+    this._items = data.items;
+    this._renderer = data.renderCallback;
   }
 
   public appendItem(item: HTMLElement): void {
