@@ -1,11 +1,11 @@
 import ApiError from '../utils/ApiError';
 import './index.css';
 import Card from '../components/Card';
-import FormValidator from '../components/FormValidator.js';
-import Section from '../components/Section';
-import PopupWithImage from '../components/PopupWithImage.js';
-import PopupWithForm from '../components/PopupWithForm.js';
-import PopupWithConfirm from '../components/PopupWithConfirm.js';
+import FormValidator from '../components/FormValidator';
+import Render from '../components/Render';
+import PopupWithImage from '../components/PopupWithImage';
+import PopupWithForm from '../components/PopupWithForm';
+import PopupWithConfirm from '../components/PopupWithConfirm';
 import User from '../components/User';
 import apiUser from '../utils/api/ApiUser';
 import apiCard from '../utils/api/ApiCard';
@@ -28,7 +28,7 @@ import {
   popupProfileSelector,
   popupUpdateAvatarSelector,
 } from './../utils/constants';
-import { IUser } from '../utils/interfaces';
+import { ICard, IFormInput, IUser } from '../utils/interfaces';
 
 // /**
 //  * Функция изменения состояния лайка
@@ -177,13 +177,6 @@ import { IUser } from '../utils/interfaces';
 //   return cardElement;
 // };
 
-//Создание экземпляра информации о пользователе
-const user = new User({
-  titleSelector: profileTitleSelector,
-  subtitleSelector: profileSubtitleSelector,
-  avatarSelector: profileAvatarSelector,
-});
-
 // //Экземпляр попапа с картинкой
 // const imagePopup = new PopupWithImage(popupImageSelector);
 
@@ -234,38 +227,196 @@ const user = new User({
 //   },
 // });
 
-(async () => {
+const handleChangeAvatar = async (link: string = '') => {
   try {
-    const userInfo: IUser = await apiUser.getUser();
-    user.setUser = userInfo;
+    const updatedAvatar = await apiUser.updateAvatar(link);
+    user.setAvatar = updatedAvatar.avatar;
   } catch (err) {
     console.error(err);
   }
-})();
+};
 
-(async () => {
+const handleEditProfile = async (name: string = '', about: string = '') => {
   try {
-    const card = await apiCard.getCards();
-    console.log(card);
+    const updatedProfile = await apiUser.editProfile({ name, about });
+    user.setName = updatedProfile.name;
+    user.setAbout = updatedProfile.about;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-    const cardE: Card = new Card({
-      selector: '#template-card',
-      data: {
-        id: '',
-        name: '',
-        link: '',
-        likes: [{ id: '', name: '', about: '', avatar: '' }],
-        owner: { id: '', name: '', about: '', avatar: '' },
-      },
-      handleClickCallback: () => {},
-      handleDeleteCallback: () => {},
-      handleLikeCallback: () => {},
+const handleAddCard = async (name: string = '', link: string = '') => {
+  try {
+    const cardData = await apiCard.addCard({ name, link });
+
+    const newCard: Card = createCard(cardData);
+    const cardElement: HTMLLIElement = newCard.getView();
+
+    const cardRender: Render<Card> = new Render(containerSelector);
+    cardRender.prependItem(cardElement);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleDeleteCard = async (_id: string) => {
+  try {
+    const deletedCard = await apiCard.deleteCard(_id);
+
+    if (deletedCard) {
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+//Создание экземпляра информации о пользователе
+const user: User = new User({
+  titleSelector: profileTitleSelector,
+  subtitleSelector: profileSubtitleSelector,
+  avatarSelector: profileAvatarSelector,
+});
+
+const imagePopup: PopupWithImage = new PopupWithImage(popupImageSelector);
+
+const updateAvatarPopup: PopupWithForm = new PopupWithForm(
+  popupAddCardSelector,
+  {
+    handleSubmitCallback: (data: IFormInput): void => {
+      handleChangeAvatar(data.link);
+    },
+  }
+);
+
+const editProfilePopup: PopupWithForm = new PopupWithForm(
+  popupAddCardSelector,
+  {
+    handleSubmitCallback: (data: IFormInput) => {
+      handleEditProfile(data.name, data.about);
+    },
+  }
+);
+
+const addCardPopup: PopupWithForm = new PopupWithForm(popupAddCardSelector, {
+  handleSubmitCallback: (data: IFormInput) => {
+    handleAddCard(data.name, data.link);
+  },
+});
+
+const deleteCardPopup: PopupWithConfirm = new PopupWithConfirm(
+  popupConfirmSelector,
+  {
+    handleSubmitCallback: () => {},
+  }
+);
+
+const handleLikeCard = async (card: Card) => {
+  try {
+    const id: string = card.getId;
+    console.log(id);
+
+    await apiCard.likeCard(id);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleDislikeCard = async (card: Card) => {
+  try {
+    const id: string = card.getId;
+    console.log(id);
+    await apiCard.dislikeCard(id);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const createCard = (card: ICard): Card => {
+  const newCard = new Card('#template-card', {
+    data: card,
+    handleClickCallback: (name: string, link: string) => {
+      imagePopup.open(name, link);
+    },
+    handleDeleteCallback: (element: HTMLLIElement) => {
+      deleteCardPopup.open();
+    },
+    handleLikeCallback: () => {
+      (async () => {
+        await handleLikeCard(newCard);
+      })();
+    },
+    handleDislikeCallback: () => {
+      (async () => {
+        await handleDislikeCard(newCard);
+      })();
+    },
+  });
+
+  return newCard;
+};
+
+(async (): Promise<void> => {
+  try {
+    const initialData: [IUser, ICard[]] = await Promise.all([
+      apiUser.getUser(),
+      apiCard.getCards(),
+    ]);
+
+    const [userData, cardsData] = initialData;
+
+    user.setUser = userData;
+
+    const cards: Card[] = cardsData.map((card: ICard) => {
+      const newCard: Card = createCard(card);
+      return newCard;
     });
-    cardE.getView();
+
+    const cardRender: Render<Card> = new Render(containerSelector, {
+      items: cards,
+      renderCallback: (item: Card) => {
+        const cardElement: HTMLLIElement = item.getView();
+        cardRender.appendItem(cardElement);
+      },
+    });
+
+    cardRender.renderItems();
   } catch (err) {
     console.error(err);
   }
 })();
+
+// (async () => {
+//   try {
+//     const userInfo: IUser = await apiUser.getUser();
+//     user.setUser = userInfo;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// })();
+
+// (async () => {
+//   try {
+//     const apiCards: ICard[] = await apiCard.getCards();
+
+//     const cards: Card[] = apiCards.map((card: ICard) => {
+//       const newCard: Card = createCard(card);
+//       return newCard;
+//     });
+
+//     const cardRender: Render<Card> = new Render(containerSelector, {
+//       items: cards,
+//       renderCallback: (item: Card) => {
+//         const cardElement: HTMLLIElement = item.getView();
+//         cardRender.appendItem(cardElement);
+//       },
+//     });
+
+//     cardRender.renderItems();
+//   } catch (err) {
+//     console.error(err);
+//   }
+// })();
 
 //apiUser
 //.getInitialData()
