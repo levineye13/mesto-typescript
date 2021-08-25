@@ -22,8 +22,20 @@ class User {
     ) as HTMLImageElement;
   }
 
+  public set setAvatar(link: string) {
+    this._avatar.src = link;
+  }
+
+  public set setName(name: string) {
+    this._name.textContent = name;
+  }
+
+  public set setAbout(about: string) {
+    this._about.textContent = about;
+  }
+
   public set setUser(data: IUser) {
-    this._id = data.id;
+    this._id = data._id;
     this._name.textContent = data.name;
     this._about.textContent = data.about;
     this._avatar.src = data.avatar;
@@ -31,7 +43,7 @@ class User {
 
   public get getUser(): IUser {
     return {
-      id: this._id,
+      _id: this._id,
       name: this._name.textContent || '',
       about: this._about.textContent || '',
       avatar: this._avatar.src || '',
