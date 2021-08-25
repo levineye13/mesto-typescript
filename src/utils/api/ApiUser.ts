@@ -7,7 +7,7 @@ class ApiUser extends Api {
     super({ _baseUrl, _headers });
   }
 
-  public async getUser(): Promise<IUser> {
+  public getUser = async (): Promise<IUser> => {
     try {
       const res = await fetch(`${this._baseUrl}/users/me`, {
         method: HTTP_METHODS.GET,
@@ -18,7 +18,7 @@ class ApiUser extends Api {
     } catch (err) {
       return err;
     }
-  }
+  };
 
   public async editProfile(user: {
     name: string;

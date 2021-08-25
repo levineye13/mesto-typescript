@@ -7,6 +7,7 @@ import PopupWithImage from '../components/PopupWithImage';
 import PopupWithForm from '../components/PopupWithForm';
 import PopupWithConfirm from '../components/PopupWithConfirm';
 import User from '../components/User';
+import Api from '../utils/api/Api';
 import apiUser from '../utils/api/ApiUser';
 import apiCard from '../utils/api/ApiCard';
 import {
@@ -342,14 +343,10 @@ const createCard = (card: ICard): Card => {
       deleteCardPopup.open();
     },
     handleLikeCallback: () => {
-      (async () => {
-        await handleLikeCard(newCard);
-      })();
+      handleLikeCard(newCard);
     },
     handleDislikeCallback: () => {
-      (async () => {
-        await handleDislikeCard(newCard);
-      })();
+      handleDislikeCard(newCard);
     },
   });
 
@@ -358,9 +355,9 @@ const createCard = (card: ICard): Card => {
 
 (async (): Promise<void> => {
   try {
-    const initialData: [IUser, ICard[]] = await Promise.all([
-      apiUser.getUser(),
-      apiCard.getCards(),
+    const initialData = await Api.getInitialData([
+      apiUser.getUser,
+      apiCard.getCards,
     ]);
 
     const [userData, cardsData] = initialData;

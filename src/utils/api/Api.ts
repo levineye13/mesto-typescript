@@ -25,6 +25,17 @@ class Api {
       return resolve(json);
     });
   }
+
+  public static async getInitialData(callbacks: Function | Function[]) {
+    const callbackList: Function[] =
+      typeof callbacks === 'function'
+        ? [callbacks]
+        : Array.isArray(callbacks)
+        ? [...callbacks]
+        : [];
+
+    return Promise.all(callbackList.map((callback) => callback()));
+  }
 }
 
 export default Api;

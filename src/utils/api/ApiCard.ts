@@ -7,7 +7,7 @@ class ApiCard extends Api {
     super({ _baseUrl, _headers });
   }
 
-  public async getCards(): Promise<ICard[]> {
+  public getCards = async (): Promise<ICard[]> => {
     try {
       const cards = await fetch(`${this._baseUrl}/cards`, {
         method: HTTP_METHODS.GET,
@@ -18,7 +18,7 @@ class ApiCard extends Api {
     } catch (err) {
       return err;
     }
-  }
+  };
 
   public async addCard(card: { name: string; link: string }): Promise<ICard> {
     try {
