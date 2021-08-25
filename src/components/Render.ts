@@ -1,18 +1,18 @@
-class Section<T> {
+class Render<T> {
   private _container: HTMLElement;
   private _items: T[];
   private _renderer: (item: T) => void;
 
   public constructor(
     containerSelector: string,
-    data: {
+    data?: {
       items: T[];
       renderCallback: (item: T) => void;
     }
   ) {
     this._container = document.querySelector(containerSelector) as HTMLElement;
-    this._items = data.items;
-    this._renderer = data.renderCallback;
+    this._items = data ? data.items : [];
+    this._renderer = data ? data.renderCallback : () => {};
   }
 
   public appendItem(item: HTMLElement): void {
@@ -28,4 +28,4 @@ class Section<T> {
   }
 }
 
-export default Section;
+export default Render;
