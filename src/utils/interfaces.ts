@@ -30,14 +30,14 @@ export interface IHttpMethod {
 }
 
 export interface IUser {
-  id: string;
+  _id: string;
   name: string;
   avatar: string;
   about: string;
 }
 
 export interface ICard {
-  id: string;
+  _id: string;
   name: string;
   link: string;
   likes: IUser[];
@@ -45,7 +45,10 @@ export interface ICard {
 }
 
 export interface IFormInput {
-  [key: string]: string;
+  name?: string;
+  avatar?: string;
+  about?: string;
+  link?: string;
 }
 
 export interface IFormValidation {
