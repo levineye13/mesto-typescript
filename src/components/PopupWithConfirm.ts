@@ -17,13 +17,13 @@ class PopupWithConfirm extends Popup {
     this._handleSubmitCallback = callback.handleSubmitCallback;
   }
 
-  private _handleSubmit(evt: Event): void {
+  private _handleSubmit = (evt: Event): void => {
     evt.preventDefault();
 
     if (this._itemId && this._itemMarkup) {
       this._handleSubmitCallback(this._itemId, this._itemMarkup);
     }
-  }
+  };
 
   protected _setEventListeners(): void {
     super._setEventListeners();
