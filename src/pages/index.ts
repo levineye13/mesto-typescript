@@ -228,44 +228,70 @@ import { ICard, IFormInput, IUser } from '../utils/interfaces';
 //   },
 // });
 
-const handleChangeAvatar = async (link: string = '') => {
+const handleChangeAvatar = async (popup: PopupWithForm, link: string = '') => {
   try {
     const updatedAvatar = await apiUser.updateAvatar(link);
-    user.setAvatar = updatedAvatar.avatar;
+
+    if (updatedAvatar) {
+      user.setAvatar = updatedAvatar.avatar;
+      popup.close();
+    }
   } catch (err) {
     console.error(err);
   }
 };
 
-const handleEditProfile = async (name: string = '', about: string = '') => {
+const handleEditProfile = async (
+  popup: PopupWithForm,
+  name: string = '',
+  about: string = ''
+) => {
   try {
     const updatedProfile = await apiUser.editProfile({ name, about });
-    user.setName = updatedProfile.name;
-    user.setAbout = updatedProfile.about;
+
+    if (updatedProfile) {
+      user.setName = updatedProfile.name;
+      user.setAbout = updatedProfile.about;
+      popup.close();
+    }
   } catch (err) {
     console.error(err);
   }
 };
 
-const handleAddCard = async (name: string = '', link: string = '') => {
+const handleAddCard = async (
+  popup: PopupWithForm,
+  name: string = '',
+  link: string = ''
+) => {
   try {
     const cardData = await apiCard.addCard({ name, link });
 
-    const newCard: Card = createCard(cardData);
-    const cardElement: HTMLLIElement = newCard.getView();
+    if (cardData) {
+      const newCard: Card = createCard(cardData);
+      const cardElement: HTMLLIElement = newCard.getView();
 
-    const cardRender: Render<Card> = new Render(containerSelector);
-    cardRender.prependItem(cardElement);
+      const cardRender: Render<Card> = new Render(containerSelector);
+      cardRender.prependItem(cardElement);
+
+      popup.close();
+    }
   } catch (err) {
     console.error(err);
   }
 };
 
-const handleDeleteCard = async (_id: string) => {
+const handleDeleteCard = async (
+  popup: PopupWithConfirm,
+  id: string,
+  markup: HTMLElement
+) => {
   try {
-    const deletedCard = await apiCard.deleteCard(_id);
+    const deletedCard = await apiCard.deleteCard(id);
 
     if (deletedCard) {
+      markup.remove();
+      popup.close();
     }
   } catch (err) {
     console.error(err);
@@ -285,7 +311,7 @@ const updateAvatarPopup: PopupWithForm = new PopupWithForm(
   popupAddCardSelector,
   {
     handleSubmitCallback: (data: IFormInput): void => {
-      handleChangeAvatar(data.link);
+      handleChangeAvatar(updateAvatarPopup, data.link);
     },
   }
 );
@@ -294,21 +320,23 @@ const editProfilePopup: PopupWithForm = new PopupWithForm(
   popupAddCardSelector,
   {
     handleSubmitCallback: (data: IFormInput) => {
-      handleEditProfile(data.name, data.about);
+      handleEditProfile(editProfilePopup, data.name, data.about);
     },
   }
 );
 
 const addCardPopup: PopupWithForm = new PopupWithForm(popupAddCardSelector, {
   handleSubmitCallback: (data: IFormInput) => {
-    handleAddCard(data.name, data.link);
+    handleAddCard(addCardPopup, data.place, data.link);
   },
 });
 
 const deleteCardPopup: PopupWithConfirm = new PopupWithConfirm(
   popupConfirmSelector,
   {
-    handleSubmitCallback: () => {},
+    handleSubmitCallback: (id: string, markup: HTMLElement) => {
+      handleDeleteCard(deleteCardPopup, id, markup);
+    },
   }
 );
 
@@ -340,14 +368,12 @@ const createCard = (card: ICard): Card => {
       imagePopup.open(name, link);
     },
     handleDeleteCallback: (element: HTMLLIElement) => {
+      deleteCardPopup.setItemId = card._id;
+      deleteCardPopup.setItemMarkup = element;
       deleteCardPopup.open();
     },
-    handleLikeCallback: () => {
-      handleLikeCard(newCard);
-    },
-    handleDislikeCallback: () => {
-      handleDislikeCard(newCard);
-    },
+    handleLikeCallback: () => {},
+    handleDislikeCallback: () => {},
   });
 
   return newCard;
