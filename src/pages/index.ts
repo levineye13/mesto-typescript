@@ -353,6 +353,12 @@ const createCard = (card: ICard): Card => {
   return newCard;
 };
 
+const handleOpenModal = (): void => {
+  openEditFormButton.addEventListener('click', editProfilePopup.open);
+  openUpdateFormButton.addEventListener('click', updateAvatarPopup.open);
+  openCardFormButton.addEventListener('click', addCardPopup.open);
+};
+
 (async (): Promise<void> => {
   try {
     const initialData = await Api.getInitialData([
@@ -378,6 +384,8 @@ const createCard = (card: ICard): Card => {
     });
 
     cardRender.renderItems();
+
+    handleOpenModal();
   } catch (err) {
     console.error(err);
   }

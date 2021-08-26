@@ -14,13 +14,13 @@ class PopupWithImage extends Popup {
     ) as HTMLHeadingElement;
   }
 
-  public open(title?: string, link?: string): void {
+  public open = (title?: string, link?: string): void => {
     this._title.textContent = title || '';
     this._image.src = link || '';
     this._image.alt = title || '';
 
     super.open();
-  }
+  };
 }
 
 export default PopupWithImage;

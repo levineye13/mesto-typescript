@@ -43,15 +43,15 @@ class PopupWithConfirm extends Popup {
     this._itemMarkup = markup;
   }
 
-  public open(): void {
+  public open = (): void => {
     super.open();
     this._setEventListeners();
-  }
+  };
 
-  public close(): void {
+  public close = (): void => {
     super.close();
     this._removeEventListeners();
-  }
+  };
 }
 
 export default PopupWithConfirm;
