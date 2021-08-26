@@ -49,6 +49,7 @@ export interface IFormInput {
   avatar?: string;
   about?: string;
   link?: string;
+  place?: string;
 }
 
 export interface IFormValidation {
