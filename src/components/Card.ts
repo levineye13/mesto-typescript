@@ -121,7 +121,6 @@ class Card {
 
   private _handleDelete(cardElement: HTMLLIElement): void {
     this._handleDeleteCallback(cardElement);
-    cardElement.remove();
   }
 
   private _handleLike(
