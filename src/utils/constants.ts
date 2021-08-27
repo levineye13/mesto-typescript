@@ -34,6 +34,7 @@ export const jobField: HTMLInputElement = document.querySelector(
   '#job-input'
 ) as HTMLInputElement;
 
+export const cardTemplateSelector = '#template-card';
 export const containerSelector: string = '.elements__list';
 export const profileAvatarSelector: string = '.profile__avatar';
 export const profileTitleSelector: string = '.profile__title';
