@@ -14,6 +14,7 @@ import {
   API_BASE_URL,
   API_KEY,
   validationConfig,
+  cardTemplateSelector,
   containerSelector,
   openEditFormButton,
   openCardFormButton,
@@ -340,29 +341,24 @@ const deleteCardPopup: PopupWithConfirm = new PopupWithConfirm(
   }
 );
 
-const handleLikeCard = async (card: Card) => {
+const handleLikeCard = async (cardId: string) => {
   try {
-    const id: string = card.getId;
-    console.log(id);
-
-    await apiCard.likeCard(id);
+    await apiCard.likeCard(cardId);
   } catch (err) {
     console.error(err);
   }
 };
 
-const handleDislikeCard = async (card: Card) => {
+const handleDislikeCard = async (cardId: string) => {
   try {
-    const id: string = card.getId;
-    console.log(id);
-    await apiCard.dislikeCard(id);
+    await apiCard.dislikeCard(cardId);
   } catch (err) {
     console.error(err);
   }
 };
 
 const createCard = (card: ICard): Card => {
-  const newCard = new Card('#template-card', {
+  const newCard = new Card(cardTemplateSelector, {
     data: card,
     handleClickCallback: (name: string, link: string) => {
       imagePopup.open(name, link);
@@ -372,8 +368,12 @@ const createCard = (card: ICard): Card => {
       deleteCardPopup.setItemMarkup = element;
       deleteCardPopup.open();
     },
-    handleLikeCallback: () => {},
-    handleDislikeCallback: () => {},
+    handleLikeCallback: (cardId: string) => {
+      handleLikeCard(cardId);
+    },
+    handleDislikeCallback: (cardId: string) => {
+      handleDislikeCard(cardId);
+    },
   });
 
   return newCard;
@@ -398,6 +398,7 @@ const handleOpenModal = (): void => {
 
     const cards: Card[] = cardsData.map((card: ICard) => {
       const newCard: Card = createCard(card);
+
       return newCard;
     });
 
@@ -405,6 +406,8 @@ const handleOpenModal = (): void => {
       items: cards,
       renderCallback: (item: Card) => {
         const cardElement: HTMLLIElement = item.getView();
+        item.checkLike(user.getId, cardElement);
+        item.checkOwner(user.getId, cardElement);
         cardRender.appendItem(cardElement);
       },
     });
@@ -416,38 +419,6 @@ const handleOpenModal = (): void => {
     console.error(err);
   }
 })();
-
-// (async () => {
-//   try {
-//     const userInfo: IUser = await apiUser.getUser();
-//     user.setUser = userInfo;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// })();
-
-// (async () => {
-//   try {
-//     const apiCards: ICard[] = await apiCard.getCards();
-
-//     const cards: Card[] = apiCards.map((card: ICard) => {
-//       const newCard: Card = createCard(card);
-//       return newCard;
-//     });
-
-//     const cardRender: Render<Card> = new Render(containerSelector, {
-//       items: cards,
-//       renderCallback: (item: Card) => {
-//         const cardElement: HTMLLIElement = item.getView();
-//         cardRender.appendItem(cardElement);
-//       },
-//     });
-
-//     cardRender.renderItems();
-//   } catch (err) {
-//     console.error(err);
-//   }
-// })();
 
 //apiUser
 //.getInitialData()
