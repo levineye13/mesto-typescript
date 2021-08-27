@@ -7,13 +7,11 @@ import PopupWithImage from '../components/PopupWithImage';
 import PopupWithForm from '../components/PopupWithForm';
 import PopupWithConfirm from '../components/PopupWithConfirm';
 import User from '../components/User';
+import Loader from '../components/Loader';
 import Api from '../utils/api/Api';
 import apiUser from '../utils/api/ApiUser';
 import apiCard from '../utils/api/ApiCard';
 import {
-  API_BASE_URL,
-  API_KEY,
-  validationConfig,
   cardTemplateSelector,
   containerSelector,
   openEditFormButton,
@@ -299,6 +297,8 @@ const handleDeleteCard = async (
   }
 };
 
+const loader = new Loader();
+
 //Создание экземпляра информации о пользователе
 const user: User = new User({
   titleSelector: profileTitleSelector,
@@ -309,7 +309,7 @@ const user: User = new User({
 const imagePopup: PopupWithImage = new PopupWithImage(popupImageSelector);
 
 const updateAvatarPopup: PopupWithForm = new PopupWithForm(
-  popupAddCardSelector,
+  popupUpdateAvatarSelector,
   {
     handleSubmitCallback: (data: IFormInput): void => {
       handleChangeAvatar(updateAvatarPopup, data.link);
@@ -318,7 +318,7 @@ const updateAvatarPopup: PopupWithForm = new PopupWithForm(
 );
 
 const editProfilePopup: PopupWithForm = new PopupWithForm(
-  popupAddCardSelector,
+  popupProfileSelector,
   {
     handleSubmitCallback: (data: IFormInput) => {
       handleEditProfile(editProfilePopup, data.name, data.about);
@@ -387,6 +387,8 @@ const handleOpenModal = (): void => {
 
 (async (): Promise<void> => {
   try {
+    loader.start();
+
     const initialData = await Api.getInitialData([
       apiUser.getUser,
       apiCard.getCards,
@@ -406,8 +408,11 @@ const handleOpenModal = (): void => {
       items: cards,
       renderCallback: (item: Card) => {
         const cardElement: HTMLLIElement = item.getView();
-        item.checkLike(user.getId, cardElement);
-        item.checkOwner(user.getId, cardElement);
+        const userId: string = user.getId;
+
+        item.checkLike(userId, cardElement);
+        item.checkOwner(userId, cardElement);
+
         cardRender.appendItem(cardElement);
       },
     });
@@ -417,6 +422,8 @@ const handleOpenModal = (): void => {
     handleOpenModal();
   } catch (err) {
     console.error(err);
+  } finally {
+    loader.stop();
   }
 })();
 
