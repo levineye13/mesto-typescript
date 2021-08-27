@@ -34,6 +34,10 @@ class User {
     this._about.textContent = about;
   }
 
+  public get getId(): string {
+    return this._id;
+  }
+
   public set setUser(data: IUser) {
     this._id = data._id;
     this._name.textContent = data.name;
