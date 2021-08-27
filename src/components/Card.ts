@@ -4,10 +4,10 @@ class Card {
   private _cardSelector: string;
   private _data: ICard;
   private _isLiked: boolean = false;
-  private _likeNumbers: number = 0;
+  private _likeNumbers: number;
   private _handleClickCallback: (name: string, link: string) => void;
-  private _handleLikeCallback: () => void;
-  private _handleDislikeCallback: () => void;
+  private _handleLikeCallback: (cardId: string) => void;
+  private _handleDislikeCallback: (cardId: string) => void;
   private _handleDeleteCallback: (cardElement: HTMLLIElement) => void;
 
   public constructor(
@@ -15,8 +15,8 @@ class Card {
     card: {
       data: ICard;
       handleClickCallback: (name: string, link: string) => void;
-      handleLikeCallback: () => void;
-      handleDislikeCallback: () => void;
+      handleLikeCallback: (cardId: string) => void;
+      handleDislikeCallback: (cardId: string) => void;
       handleDeleteCallback: (cardElement: HTMLLIElement) => void;
     }
   ) {
@@ -26,6 +26,7 @@ class Card {
     this._handleLikeCallback = card.handleLikeCallback;
     this._handleDislikeCallback = card.handleDislikeCallback;
     this._handleDeleteCallback = card.handleDeleteCallback;
+    this._likeNumbers = this._data.likes.length;
   }
 
   private _getTemplate(): HTMLLIElement {
@@ -42,57 +43,33 @@ class Card {
     return element;
   }
 
-  // /**
-  //  * Лайк карточки
-  //  *
-  //  * @param  {object} cardElement - разметка карточки
-  //  * @private
-  //  */
-  // toggleLikeButtonState(cardElement) {
-  //   cardElement
-  //     .querySelector('.elements__like-button')
-  //     .classList.toggle('elements__like-button_active');
-  // }
-
-  // setLikeButtonState(state) {
-  //   this._isLiked = state;
-  // }
-
-  // getLikeButtonState() {
-  //   return this._isLiked;
-  // }
-
-  // setCountLike(countLike) {
-  //   this._likeCount = countLike;
-  // }
-
-  // addLike() {
-  //   this._cardElement.querySelector('.elements__like-count').textContent =
-  //     ++this._likeCount;
-  // }
-
-  // removeLike() {
-  //   this._cardElement.querySelector('.elements__like-count').textContent =
-  //     --this._likeCount;
-  // }
-
-  // /**
-  //  * Удаление карточек со страницы
-  //  *
-  //  * @param  {object} cardElement - разметка карточки
-  //  * @private
-  //  */
-  // _handleRemoveCard(cardElement) {
-  //   cardElement.remove();
-  //   cardElement = null;
-  // }
-
   public get getLikeState(): boolean {
     return this._isLiked;
   }
 
   public get getId(): string {
     return this._data._id;
+  }
+
+  public checkLike(userId: string, cardElement: HTMLLIElement): void {
+    const liked = this._data.likes.some((like) => like._id === userId);
+
+    if (liked) {
+      const likeButton: HTMLButtonElement = cardElement.querySelector(
+        '.elements__like-button'
+      ) as HTMLButtonElement;
+
+      this._isLiked = true;
+      likeButton.classList.add('elements__like-button_active');
+    }
+  }
+
+  public checkOwner(userId: string, cardElement: HTMLLIElement): void {
+    const isOwner = this._data.owner._id === userId;
+
+    if (!isOwner) {
+      cardElement.querySelector('.elements__delete-card')?.remove();
+    }
   }
 
   private _like(
@@ -127,7 +104,7 @@ class Card {
     likeElement: HTMLSpanElement,
     likeButton: HTMLButtonElement
   ): void {
-    this._handleLikeCallback();
+    this._handleLikeCallback(this._data._id);
     this._like(likeElement, likeButton);
   }
 
@@ -135,7 +112,7 @@ class Card {
     likeElement: HTMLSpanElement,
     likeButton: HTMLButtonElement
   ): void {
-    this._handleDislikeCallback();
+    this._handleDislikeCallback(this._data._id);
     this._dislike(likeElement, likeButton);
   }
 
