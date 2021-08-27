@@ -1,0 +1,66 @@
+@keyframes circle_scale {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.6);
+  }
+}
+
+.loader__circle {
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #fff;
+  animation: circle_scale 1s linear 0s infinite alternate;
+}
+
+.loader__circle:nth-child(1) {
+  top: 0;
+  left: calc(50% - 5px);
+  animation-delay: 0s;
+}
+
+.loader__circle:nth-child(2) {
+  top: calc(20% - 5px);
+  left: 80%;
+  animation-delay: 0.2s;
+}
+
+.loader__circle:nth-child(3) {
+  top: calc(50% - 5px);
+  right: 0;
+  animation-delay: 0.4s;
+}
+
+.loader__circle:nth-child(4) {
+  top: calc(80% - 5px);
+  left: 80%;
+  animation-delay: 0.6s;
+}
+
+.loader__circle:nth-child(5) {
+  bottom: 0%;
+  left: calc(50% - 5px);
+  animation-delay: 0.8s;
+}
+
+.loader__circle:nth-child(6) {
+  top: calc(80% - 5px);
+  right: 80%;
+  animation-delay: 1s;
+}
+
+.loader__circle:nth-child(7) {
+  top: calc(50% - 5px);
+  left: 0;
+  animation-delay: 1.2s;
+}
+
+.loader__circle:nth-child(8) {
+  top: calc(20% - 5px);
+  right: 80%;
+  animation-delay: 1.4s;
+}
