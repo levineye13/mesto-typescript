@@ -69,14 +69,15 @@ class FormValidator {
     currentInput: HTMLInputElement
   ): void {
     const isValid = this._hasInvalidInput(inputs);
+
     this._checkInputValidity(currentInput);
     this._changeSubmitState(isValid);
   }
 
-  private _handleSubmitEvent(evt: Event): void {
+  private _handleSubmitEvent = (evt: Event): void => {
     evt.preventDefault();
     this._changeSubmitState(false);
-  }
+  };
 
   private _setEventListeners(inputs: HTMLInputElement[]): void {
     inputs.forEach((input: HTMLInputElement): void => {
@@ -95,6 +96,11 @@ class FormValidator {
   public enable(): void {
     const inputs: HTMLInputElement[] = this._getFormInputs();
 
+    if (inputs.length === 0) {
+      return;
+    }
+
+    this._changeSubmitState(true);
     this._form.addEventListener('submit', this._handleSubmitEvent);
 
     this._setEventListeners(inputs);
