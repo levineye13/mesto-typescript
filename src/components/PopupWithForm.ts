@@ -30,6 +30,15 @@ class PopupWithForm extends Popup {
     this._handleSubmitCallback(this._getInputValues());
   };
 
+  private _reset() {
+    const submitElement: HTMLButtonElement = this._form.querySelector(
+      '.popup__save-button'
+    ) as HTMLButtonElement;
+
+    this._form.reset();
+    submitElement.classList.add('button_inactive');
+  }
+
   protected _setEventListeners(): void {
     super._setEventListeners();
 
@@ -49,7 +58,7 @@ class PopupWithForm extends Popup {
 
   public close = (): void => {
     super.close();
-    this._form.reset();
+    this._reset();
     this._removeEventListeners();
   };
 }
