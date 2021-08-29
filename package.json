@@ -1,7 +1,7 @@
 {
   "name": "mesto-typescript",
   "version": "0.0.1",
-  "description": "**<ins>[В данном сервисе](https://levineye13.github.io/mesto/index.html)</ins>** представлены иллюстрации замых захватывающих мест России, а также возможность редактирования профиля.",
+  "description": "В данном сервисе https://levineye13.github.io/mesto-typescript/index.html представлены иллюстрации замых захватывающих мест России, а также возможность редактирования профиля.",
   "private": "true",
   "scripts": {
     "build:dev": "webpack",
@@ -13,7 +13,10 @@
     "type": "git",
     "url": "git+https://github.com/levineye13/mesto-typescript.git"
   },
-  "author": "Oleg Zharov",
+  "author": {
+    "email": "levineye@gmail.com",
+    "name": "Oleg Zharov"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/levineye13/mesto-typescript/issues"
