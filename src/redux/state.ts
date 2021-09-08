@@ -1,4 +1,4 @@
-import { IUser } from '../utils/interfaces';
+import { ICard, IUser } from '../utils/interfaces';
 
 const initialUser: IUser = {
   _id: '',
@@ -7,5 +7,7 @@ const initialUser: IUser = {
   avatar: 'avatar',
 };
 
-export const combinedState = { user: initialUser };
-export type combinedStateType = { user: IUser };
+const initialCards: ICard[] = [];
+
+export const combinedState = { user: initialUser, cards: initialCards };
+export type combinedStateType = { user: IUser; cards: ICard[] };
