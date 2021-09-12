@@ -10,4 +10,4 @@ const initialUser: IUser = {
 const initialCards: ICard[] = [];
 
 export const combinedState = { user: initialUser, cards: initialCards };
-export type combinedStateType = { user: IUser; cards: ICard[] };
+export type RootState = typeof combinedState;
