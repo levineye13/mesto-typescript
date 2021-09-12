@@ -1,6 +1,18 @@
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+
 import { SetUser } from './user';
 import { SetCards } from './card';
+import { RootState } from '../state';
 
-export { SetUser, SetCards };
+type AppActionTypes = SetUser | SetCards;
 
-export type ActionType = SetUser | SetCards;
+type AppThunkAction<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  AppActionTypes
+>;
+
+type AppThunkDispatch = ThunkDispatch<RootState, unknown, AppActionTypes>;
+
+export { AppActionTypes, AppThunkAction, AppThunkDispatch, SetUser, SetCards };
