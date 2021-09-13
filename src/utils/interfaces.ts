@@ -60,3 +60,9 @@ export interface IFormValidation {
   inputErrorClass: string;
   errorClass: string;
 }
+
+export interface IApiUser {
+  getUser: () => Promise<IUser>;
+  editProfile: ({ name, about }: IUser) => Promise<IUser>;
+  updateAvatar: (avatar: string) => Promise<IUser>;
+}

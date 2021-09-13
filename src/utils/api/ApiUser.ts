@@ -1,8 +1,8 @@
 import Api from './Api';
-import { IRequestHeader, IUser } from '../interfaces';
+import { IApiUser, IRequestHeader, IUser } from '../interfaces';
 import { HTTP_METHODS, API_BASE_URL, API_KEY } from '../../utils/constants';
 
-class ApiUser extends Api {
+class ApiUser extends Api implements IApiUser {
   public constructor(_baseUrl: string, _headers: IRequestHeader) {
     super({ _baseUrl, _headers });
   }
@@ -63,4 +63,5 @@ const apiUser = new ApiUser(API_BASE_URL, {
   'Content-Type': 'application/json',
 });
 
-export default apiUser;
+export default ApiUser;
+export { apiUser };
